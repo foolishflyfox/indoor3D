@@ -117,7 +117,8 @@ IndoorMap3d = function(mapdiv){
         var camAngle = _this.mall.FrontAngle + Math.PI/2;
         var camDir = [Math.cos(camAngle), Math.sin(camAngle)];
         var camLen = 500;
-        var camLen = (500/_this.mall.jsonData.data.building.Scale3D)>>0;
+        if(_this.mall.jsonData.data.building.Scale3D!=undefined)
+            camLen = (500/_this.mall.jsonData.data.building.Scale3D)>>0;
         var tiltAngle = 75.0 * Math.PI/180.0;
         _this.camera.position.set(camDir[1]*camLen, Math.sin(tiltAngle) * camLen, camDir[0]*camLen);//TODO: adjust the position automatically
         _this.camera.lookAt(_scene.position);
