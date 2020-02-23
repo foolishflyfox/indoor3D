@@ -120,9 +120,9 @@ IndoorMap2d = function(mapdiv){
 
     this.zoomIn = function(zoomScale){
         if(zoomScale === undefined){
-            zoomScale = 1.25;
+            zoomScale = 0.8;
         }
-        _this.renderer.scale(zoomScale);
+        _this.renderer.scale(1.0/zoomScale);
     }
 
     this.zoomOut = function(zoomScale){
