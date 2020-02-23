@@ -77,7 +77,9 @@ IndoorMap2d = function(mapdiv){
         var loader = new IndoorMapLoader(false);
         loader.load(fileName, function(mall){
             _this.mall = mall;
+            
             _this.showFloor(_this.mall.getDefaultFloorId());
+            
             if(callback) {
                 callback();
             }
@@ -176,19 +178,20 @@ IndoorMap2d = function(mapdiv){
         if(_this.mall == null){
             return;
         }
+        
         _curFloorId = floorid;
         _this.mall.showFloor(floorid);
 
         if(_this.options.showNames) {
             _this.renderer.createNameTexts(floorid, _this.mall);
         }
-
+        
         if(_this.options.showPubPoints) {
             _this.renderer.loadSpirtes(_this.mall);
         }
-
+        
         _this.adjustCamera();
-
+        
         return _this;
     }
 
@@ -415,13 +418,16 @@ Canvas2DRenderer = function (map) {
         _curFloor = _map.mall.getCurFloor();
         updateOutline(_curFloor, _scale);
         var funcAreas = _curFloor.FuncAreas;
+        
         for(var i = 0; i < funcAreas.length; i++){
             updateOutline(funcAreas[i], _scale);
         }
+        
         var pubPoints = _curFloor.PubPoint;
         for(var i = 0; i < pubPoints.length ; i++){
             updateOutline(pubPoints[i], _scale);
         }
+        
         _ctx.translate(-_translate[0], -_translate[1]);
         _translate[0] *= scale;
         _translate[1] *= scale;
@@ -437,14 +443,17 @@ Canvas2DRenderer = function (map) {
             obj.newOutline.push(newPoint[0]);
             obj.newOutline.push(newPoint[1]);
         }
+        
         obj.rect = IDM.GeomUtil.getBoundingRect(obj.newOutline);
         //if(!obj.rect.isCollide(_bounds)){
         //    obj.newOutline = [];
         //    obj.rect = new Rect();
         //}
-        if(obj.Center) {
+        
+        if(obj.Center === undefined) {
             obj.Center = [((obj.rect.br[0]+obj.rect.tl[0])/2) >> 0 , ((obj.rect.br[1]+obj.rect.tl[1])/2) >> 0];
         }
+        
     }
 
     function updatePoint(point, scale){
@@ -459,7 +468,6 @@ Canvas2DRenderer = function (map) {
         floorSize[1] = floor.rect.br[1] - floor.rect.tl[1];
         var scaleX = (_map.containerSize[0]*(1 - _padding)) / floorSize[0];
         var scaleY = (_map.containerSize[1]*(1 - _padding)) / floorSize[1];
-
 
         _this.mapCenter[0] = (floor.rect.br[0] + floor.rect.tl[0]) / 2;
         _this.mapCenter[1] = (floor.rect.br[1] + floor.rect.tl[1]) / 2;

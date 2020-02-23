@@ -645,9 +645,7 @@ IndoorMapLoader.prototype.loadAjaxJSON = function ( context, url, callback, call
             if ( xhr.status === 200 || xhr.status === 0 ) {
 
                 if ( xhr.responseText ) {
-
                     var json = JSON.parse( xhr.responseText );
-
                     var result = context.parse( json );
                     callback( result );
 
