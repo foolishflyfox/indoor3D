@@ -119,6 +119,30 @@ Rect.prototype.isCollide = function(rect){
 
 IDM.GeomUtil = {
 
+    // outline 奇数索引表示 x，偶数索引表示 y
+    // 获取多边形的重心
+    getCenterPoint: function(outline){
+        if(outline.length < 2) return [0, 0];
+        if(outline.length < 4) return [outline[0], outline[1]];
+        
+        var area = 0, Gx = 0, Gy = 0;
+        for(var i=2; i<=outline.length; i+=2){
+            var ix = outline[i%outline.length];
+            var iy = outline[i%outline.length+1];
+            var nextx = outline[i-2];
+            var nexty = outline[i-1];
+            var temp = (ix*nexty - iy*nextx) / 2.0;
+            area += temp;
+            Gx += temp * (ix+nextx) / 3.0;
+            Gy += temp * (iy+nexty) / 3.0;
+        }
+        Gx = (Gx / area) >> 0;
+        Gy = (Gy / area) >> 0;
+        console.log([Gx, Gy]);
+        return [Gx, Gy];
+    },
+
+
     getBoundingRect: function (points) {
         var rect = new Rect();
         //if there are less than 1 point
@@ -148,7 +172,6 @@ IDM.GeomUtil = {
 }
 //---------------------the IDM.DomUtil class--------------------
 IDM.DomUtil = {
-
     getElementLeft: function (element) {
         var actualLeft = element.offsetLeft;
         var current = element.offsetParent;

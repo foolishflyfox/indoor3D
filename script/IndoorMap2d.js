@@ -451,7 +451,8 @@ Canvas2DRenderer = function (map) {
         //}
         
         if(obj.Center === undefined) {
-            obj.Center = [((obj.rect.br[0]+obj.rect.tl[0])/2) >> 0 , ((obj.rect.br[1]+obj.rect.tl[1])/2) >> 0];
+            // obj.Center = [((obj.rect.br[0]+obj.rect.tl[0])/2) >> 0 , ((obj.rect.br[1]+obj.rect.tl[1])/2) >> 0];
+            obj.Center = IDM.GeomUtil.getCenterPoint(obj.Outline[0][0]);
         }
         
     }
