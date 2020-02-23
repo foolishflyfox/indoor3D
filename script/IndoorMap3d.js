@@ -434,6 +434,7 @@ IndoorMap3d = function(mapdiv){
         }
         var funcAreaJson = _this.mall.getFloorJson(_this.mall.getCurFloorId()).FuncAreas;
         for(var i = 0 ; i < funcAreaJson.length; i++){
+            if(funcAreaJson[i].Name_en==undefined) funcAreaJson[i].Name_en = '';
             var sprite = makeTextSprite(funcAreaJson[i].Name_en, _theme.fontStyle);
             sprite.oriX = funcAreaJson[i].Center[0];
             sprite.oriY = funcAreaJson[i].Center[1];
