@@ -450,8 +450,8 @@ function ParseModel(json, is3d, theme){
 
             if(is3d) { // for 3d model
                 var floorObj = new THREE.Object3D();
-
-                floorHeight = floor.High / scale;
+                // floorHeight = floor.High / scale;
+                floorHeight = floor.High;
                 if (floorHeight == 0.0) { //if it's 0, set to 50.0
                     floorHeight = 50.0;
                 }
