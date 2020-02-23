@@ -778,6 +778,7 @@ Canvas2DRenderer = function (map) {
                 name.halfHeight = 0;
                 name.visible = false;
             }else {
+                if(funcAreaJson[i].Name==undefined) funcAreaJson[i].Name = '';
                 name.text = funcAreaJson[i].Name;
                 name.halfWidth = _ctx.measureText(name.text).width / 2;
                 name.halfHeight = fontStyle.fontsize  / 4;
