@@ -559,19 +559,24 @@ Canvas2DRenderer = function (map) {
         for(var i = 0 ; i < funcAreas.length; i++){
             var funcArea = funcAreas[i];
             var poly = funcArea.newOutline;
-            if(poly.length < 6){ //less than 3 points, return
-                continue;
+            if(funcArea.Closed==true){
+                if(poly.length < 6){ //less than 3 points, return
+                    continue;
+                }
+                _ctx.lineWidth = 1;
+            }else{
+                _ctx.lineWidth = 3;
             }
             _ctx.beginPath();
-
             _ctx.moveTo(poly[0], -poly[1]);
             for(var j = 2; j < poly.length - 1; j+=2){
                 _ctx.lineTo(poly[j],-poly[j+1]);
             }
-            _ctx.closePath();
-
-            _ctx.fillStyle = funcArea.fillColor;
-            _ctx.fill();
+            if(funcArea.Closed == true){
+                _ctx.closePath();
+                _ctx.fillStyle = funcArea.fillColor;
+                _ctx.fill();
+            }
             _ctx.stroke();
         }
 
