@@ -138,7 +138,7 @@ IDM.GeomUtil = {
         }
         Gx = (Gx / area) >> 0;
         Gy = (Gy / area) >> 0;
-        console.log([Gx, Gy]);
+        // console.log([Gx, Gy]);
         return [Gx, Gy];
     },
 
@@ -789,6 +789,10 @@ function ParseModel(json, is3d, theme){
                     shape = new THREE.Shape(points);
 
                     var center = funcArea.Center;
+                    if(center==undefined){
+                        center = IDM.GeomUtil.getCenterPoint(funcArea.Outline[0][0]);
+                        funcArea.Center = center;
+                    }
                     floorObj.points.push({ name: funcArea.Name, type: funcArea.Type, position: new THREE.Vector3(center[0] * scale, floorHeight * scale, -center[1] * scale)});
 
                     //solid model
