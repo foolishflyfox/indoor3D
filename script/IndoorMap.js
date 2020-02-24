@@ -473,7 +473,7 @@ function ParseModel(json, is3d, theme){
                 floor.fillColor = theme.floor.color;
                 mall.floors.push(floor);
             }
-            
+
             //funcArea geometry
             for(var j=0; j<floor.FuncAreas.length; j++){
 
@@ -506,11 +506,11 @@ function ParseModel(json, is3d, theme){
                         floorObj.add(mesh);
 
                         //top wireframe
-                        geometry = shape.createPointsGeometry();
-                        wire = new THREE.Line(geometry, new THREE.LineBasicMaterial(theme.strokeStyle));
-                        wire.position.set(0, 0, floorHeight);
+                        // geometry = shape.createPointsGeometry();
+                        // wire = new THREE.Line(geometry, new THREE.LineBasicMaterial(theme.strokeStyle));
+                        // wire.position.set(0, 0, floorHeight);
 
-                        floorObj.add(wire);
+                        // floorObj.add(wire);
                     }else{
                         var outline = funcArea.Outline[0][0];
                         for(let i=2; i+1<outline.length; i+=2){
@@ -526,12 +526,23 @@ function ParseModel(json, is3d, theme){
                                 p2x, p2y, 0
                             ]);
                             geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
-                            var material = new THREE.MeshBasicMaterial( { color: 0xff0000, 
-                                side:THREE.DoubleSide, transparent: true, opacity:0.4
-                                } );
+                            var material = new THREE.MeshBasicMaterial(theme.wall(funcArea.Wall));
                             var mesh = new THREE.Mesh( geometry, material );
                             floorObj.add(mesh);
+
+                            material = new THREE.LineBasicMaterial(theme.wallline(funcArea.Wall));
+                            geometry = new THREE.Geometry();
+                            geometry.vertices.push(
+                                new THREE.Vector3(p1x, p1y, 0 ),
+                                new THREE.Vector3(p2x, p2y, 0 ),
+                                new THREE.Vector3(p2x, p2y, floorHeight ),
+                                new THREE.Vector3(p1x, p1y, floorHeight ),
+                                new THREE.Vector3(p1x, p1y, 0 )
+                            );
+                            var line = new THREE.Line( geometry, material );
+                            floorObj.add(line);
                         }
+                        
                     }
                     
                 }

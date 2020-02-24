@@ -179,6 +179,42 @@ var default3dTheme = {
     //selected room's style
     selected: "#ffff55",
 
+    // walls' style
+    wall: function(walltype){
+        var wallstyle = { 
+            color: 0x00bfff, 
+            side:THREE.DoubleSide, 
+            transparent: true, 
+            opacity:0.7
+        }; 
+        switch(walltype){
+            case 'room':
+                wallstyle.color = 0xdaa520;
+                break;
+            case 'subroom':
+                wallstyle.color = 0xfb9fa4;
+                break;
+        }
+        return wallstyle;
+    },
+
+    // walls' wireframe style
+    wallline: function(walltype){
+        var walllinestyle = {
+            color: 0x101010,
+            opacity: 0.9,
+            transparent: true,
+            linewidth: 2
+        }
+        switch(walltype){
+            case 'room':
+                break;
+            case 'subroom':
+                break;
+        }
+        return walllinestyle;
+    },
+
     //rooms' style
     room: function (type, category) {
         var roomStyle;
@@ -245,7 +281,7 @@ var default3dTheme = {
                 };
                 break;
             case 106: //education
-                return {
+                roomStyle = {
                     color: "#2ca02c",
                     opacity: 0.7,
                     transparent: true
