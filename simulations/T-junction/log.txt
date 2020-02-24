@@ -1,0 +1,58 @@
+INFO: 	Loading and parsing the persons attributes
+INFO:	risk tolerance mu = 0.000000, risk tolerance sigma = 1.000000
+
+INFO: 	...Done
+INFO: 	Loading building file successful!!!
+
+INFO:	done with loading extra routing information
+INFO:	Loading  the traffic info file
+WARNING:	could not find any traffic information
+INFO: 	Init Geometry
+INFO: 	Init Geometry successful!!!
+
+INFO: 	Init Distribute
+INFO: 	Distributing 30 Agents in Room/Subrom [0/0]! Maximum allowed: 1257
+	...Done
+INFO: 	Initializing the grid with cell size: 2.200000 
+INFO: 	Done with Initializing the grid 
+INFO:	Init the Global Router Engine
+INFO:	Triangulating the geometry
+INFO:	Done...
+INFO:	Using the triangulation in the global router
+-664.000000145.000000
+-657.000000140.000000
+-657.000000140.000000
+-644.000000145.000000
+-657.000000140.000000
+-651.000000140.000000
+-651.000000140.000000
+-644.000000145.000000
+-657.000000140.000000
+-651.000000132.000000
+INFO:	Done...
+INFO: 	Exit to outside found: 6 [trans_0_room_0_subroom_0]
+INFO: 	Exit to outside found: 7 [trans_1_room_0_subroom_0]
+INFO:	Done with the Global Router Engine!
+INFO: 	Checking the geometry for artifacts: (Ignore Warnings, if ff_[...] router is used!)
+INFO: 	...Done!!!
+
+INFO:	 Init Operational Model starting ...
+INFO:	 Init Operational Model done
+INFO:	 nPeds 30 received
+INFO:	Files 'events.txt' missing. Realtime interaction with the simulation not possible.
+INFO: 	Adding a new routing Engine with the key: 
+
+INFO: 	Looking for pre-defined events in other files
+INFO: 	No events found
+INFO: 	Start runSimulation() with 30 pedestrians
+
+INFO: 	End runSimulation()
+
+Exec Time [s]     : 5.00
+Evac Time [s]     : 43.75
+Realtime Factor   : 8.75 X 
+Number of Threads : 4
+Warnings          : 1
+Errors            : 0
+Deleted Agents    : 0
+
