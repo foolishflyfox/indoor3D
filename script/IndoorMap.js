@@ -473,14 +473,16 @@ function ParseModel(json, is3d, theme){
                 floor.fillColor = theme.floor.color;
                 mall.floors.push(floor);
             }
-
+            
             //funcArea geometry
             for(var j=0; j<floor.FuncAreas.length; j++){
 
                 var funcArea = floor.FuncAreas[j];
                 funcArea.rect = IDM.GeomUtil.getBoundingRect(funcArea.Outline[0][0]);
-
-                if(is3d) {
+                if(!is3d) {
+                    funcArea.fillColor = theme.room(parseInt(funcArea.Type), funcArea.Category).color;
+                    funcArea.strokeColor = theme.strokeStyle.color;
+                }else {
                     points = parsePoints(funcArea.Outline[0][0]);
                     shape = new THREE.Shape(points);
 
@@ -491,26 +493,47 @@ function ParseModel(json, is3d, theme){
                     }
                     floorObj.points.push({ name: funcArea.Name, type: funcArea.Type, position: new THREE.Vector3(center[0] * scale, floorHeight * scale, -center[1] * scale)});
 
-                    //solid model
-                    extrudeSettings = {amount: floorHeight, bevelEnabled: false};
-                    geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-                    material = new THREE.MeshLambertMaterial(theme.room(parseInt(funcArea.Type), funcArea.Category));
-                    mesh = new THREE.Mesh(geometry, material);
-                    mesh.type = "solidroom";
-                    mesh.id = funcArea._id;
+                    if(funcArea.Closed){
+                        //solid model
+                        // extrudeSettings = {amount: floorHeight, bevelEnabled: false};
+                        extrudeSettings = {amount: floorHeight, bevelEnabled: true, bevelThickness: 8};
+                        geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+                        material = new THREE.MeshLambertMaterial(theme.room(parseInt(funcArea.Type), funcArea.Category));
+                        mesh = new THREE.Mesh(geometry, material);
+                        mesh.type = "solidroom";
+                        mesh.id = funcArea._id;
 
-                    floorObj.add(mesh);
+                        floorObj.add(mesh);
 
-                    //top wireframe
-                    geometry = shape.createPointsGeometry();
-                    wire = new THREE.Line(geometry, new THREE.LineBasicMaterial(theme.strokeStyle));
-                    wire.position.set(0, 0, floorHeight);
+                        //top wireframe
+                        geometry = shape.createPointsGeometry();
+                        wire = new THREE.Line(geometry, new THREE.LineBasicMaterial(theme.strokeStyle));
+                        wire.position.set(0, 0, floorHeight);
 
-                    floorObj.add(wire);
-                }else{
-                    funcArea.fillColor = theme.room(parseInt(funcArea.Type), funcArea.Category).color;
-                    funcArea.strokeColor = theme.strokeStyle.color;
-
+                        floorObj.add(wire);
+                    }else{
+                        var outline = funcArea.Outline[0][0];
+                        for(let i=2; i+1<outline.length; i+=2){
+                            var p1x = outline[i-2], p1y = outline[i-1];
+                            var p2x = outline[i], p2y = outline[i+1];
+                            var geometry = new THREE.BufferGeometry();
+                            var vertices = new Float32Array([
+                                p1x, p1y, 0,
+                                p1x, p1y, floorHeight,
+                                p2x, p2y, 0,
+                                p1x, p1y, floorHeight,
+                                p2x, p2y, floorHeight,
+                                p2x, p2y, 0
+                            ]);
+                            geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+                            var material = new THREE.MeshBasicMaterial( { color: 0xff0000, 
+                                side:THREE.DoubleSide, transparent: true, opacity:0.4
+                                } );
+                            var mesh = new THREE.Mesh( geometry, material );
+                            floorObj.add(mesh);
+                        }
+                    }
+                    
                 }
             }
 
