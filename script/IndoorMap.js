@@ -564,6 +564,7 @@ function ParseModel(json, is3d, theme){
             //building geometry
             building = json.data.building;
             points = parsePoints(building.Outline[0][0]);
+            if(building.FrontAngle==undefined) building.FrontAngle = -0.5;
             mall.FrontAngle = building.FrontAngle;
 
             if (points.length > 0) {

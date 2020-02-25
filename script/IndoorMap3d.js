@@ -114,17 +114,44 @@ IndoorMap3d = function(mapdiv){
         return _this;
     }
 
+    this.getCameraPos = function(){
+        if(!this.is3d) return;
+        let x = this.camera.position.x;
+        let y = this.camera.position.y;
+        let z = this.camera.position.z;
+        console.log("Camera Position = ("+x+', '+y+', '+z+')');
+    }
+
     //reset the camera to default configuration
     this.setDefaultView = function () {
-        var camAngle = _this.mall.FrontAngle + Math.PI/2;
-        var camDir = [Math.cos(camAngle), Math.sin(camAngle)];
-        var camLen = 500;
-        if(_this.mall.jsonData.data.building.Scale3D!=undefined)
-            camLen = (500/_this.mall.jsonData.data.building.Scale3D)>>0;
-        var tiltAngle = 75.0 * Math.PI/180.0;
-        _this.camera.position.set(camDir[1]*camLen, Math.sin(tiltAngle) * camLen, camDir[0]*camLen);//TODO: adjust the position automatically
-        _this.camera.lookAt(_scene.position);
+        let building = this.mall.jsonData.data.building;
+        let DefaultCameraPos = building.CameraPos;
+        let px, py, pz;
+        if(DefaultCameraPos){
+            px = DefaultCameraPos[0];
+            py = DefaultCameraPos[1];
+            pz = DefaultCameraPos[2];
+        }else{
+            var camAngle = _this.mall.FrontAngle + Math.PI/2;
+            var camDir = [Math.cos(camAngle), Math.sin(camAngle)];
+            var camLen = 500;
+            if(_this.mall.jsonData.data.building.Scale3D!=undefined)
+                camLen = (500/_this.mall.jsonData.data.building.Scale3D)>>0;
+            var tiltAngle = 75.0 * Math.PI/180.0;
+            px = camDir[1]*camLen;
+            py = Math.sin(tiltAngle) * camLen;
+            pz = camDir[0]*camLen;
+        }
+        _this.camera.position.set(px, py, pz);
 
+        if(building.TranslateX!=undefined && building.TranslateY!=undefined
+            && building.TranslateZ!=undefined){
+            _this.camera.lookAt(new THREE.Vector3(building.TranslateX,
+                building.TranslateY, building.TranslateZ));
+        }else{
+            _this.camera.lookAt(_scene.position);
+        }
+        
         _controls.reset();
         _controls.viewChanged = true;
         return _this;
