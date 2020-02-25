@@ -84,14 +84,16 @@ IndoorMap3d = function(mapdiv){
             _this.mall = mall;
             _scene.add(_this.mall.root);
             _scene.mall = mall;
+
+            _this.renderer.setClearColor(_theme.background);
+            if(mall.jsonData.data.building.DefaultFloor) {
+                _curFloorId = mall.jsonData.data.building.DefaultFloor;
+            }
+            if(_curFloorId == 0) _this.showAllFloors();
+            else _this.showFloor(_curFloorId);
+
             if(callback) {
                 callback();
-            }
-            _this.renderer.setClearColor(_theme.background);
-            if(_curFloorId == 0){
-                _this.showAllFloors();
-            }else{
-                _this.showFloor(_curFloorId);
             }
 
         });
@@ -152,6 +154,10 @@ IndoorMap3d = function(mapdiv){
 
     //show floor by id
     this.showFloor = function(floorid) {
+        if(floorid==0) {
+            _this.showAllFloors();
+            return _this;
+        }
         _curFloorId = floorid;
         if(_scene.mall == null){
             return;
