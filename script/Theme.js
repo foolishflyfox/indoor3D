@@ -180,7 +180,11 @@ var default3dTheme = {
     selected: "#ffff55",
 
     // walls' style
+    subroom_id: 0,
     wall: function(walltype){
+        subroom_colors = [
+            0xfffac8, 0xf2e282, 0xe7b24c,
+            0xe1903e, 0xff724e];
         var wallstyle = { 
             color: 0x00bfff, 
             side:THREE.DoubleSide, 
@@ -189,10 +193,11 @@ var default3dTheme = {
         }; 
         switch(walltype){
             case 'room':
-                wallstyle.color = 0xdaa520;
+                wallstyle.color = 0x4bb5d9;
                 break;
             case 'subroom':
-                wallstyle.color = 0xfb9fa4;
+                opacity = 0.45;
+                wallstyle.color = subroom_colors[(this.subroom_id++)%subroom_colors.length];
                 break;
         }
         return wallstyle;

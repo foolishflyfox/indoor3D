@@ -495,6 +495,8 @@ function ParseModel(json, is3d, theme){
 
                     if(funcArea.Open){
                         var outline = funcArea.Outline[0][0];
+                        let wall_theme = theme.wall(funcArea.Wall);
+                        let wallline_theme = theme.wallline(funcArea.Wall);
                         for(let i=2; i+1<outline.length; i+=2){
                             var p1x = outline[i-2], p1y = outline[i-1];
                             var p2x = outline[i], p2y = outline[i+1];
@@ -508,11 +510,11 @@ function ParseModel(json, is3d, theme){
                                 p2x, p2y, 0
                             ]);
                             geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
-                            var material = new THREE.MeshBasicMaterial(theme.wall(funcArea.Wall));
+                            var material = new THREE.MeshBasicMaterial(wall_theme);
                             var mesh = new THREE.Mesh( geometry, material );
                             floorObj.add(mesh);
 
-                            material = new THREE.LineBasicMaterial(theme.wallline(funcArea.Wall));
+                            material = new THREE.LineBasicMaterial(wallline_theme);
                             geometry = new THREE.Geometry();
                             geometry.vertices.push(
                                 new THREE.Vector3(p1x, p1y, 0 ),
