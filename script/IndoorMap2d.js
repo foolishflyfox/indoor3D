@@ -559,7 +559,7 @@ Canvas2DRenderer = function (map) {
         for(var i = 0 ; i < funcAreas.length; i++){
             var funcArea = funcAreas[i];
             var poly = funcArea.newOutline;
-            if(funcArea.Closed==true){
+            if(!funcArea.Open){
                 if(poly.length < 6){ //less than 3 points, return
                     continue;
                 }
@@ -572,7 +572,7 @@ Canvas2DRenderer = function (map) {
             for(var j = 2; j < poly.length - 1; j+=2){
                 _ctx.lineTo(poly[j],-poly[j+1]);
             }
-            if(funcArea.Closed == true){
+            if(!funcArea.Open){
                 _ctx.closePath();
                 _ctx.fillStyle = funcArea.fillColor;
                 _ctx.fill();

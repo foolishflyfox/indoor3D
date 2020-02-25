@@ -450,8 +450,8 @@ function ParseModel(json, is3d, theme){
 
             if(is3d) { // for 3d model
                 var floorObj = new THREE.Object3D();
-                // floorHeight = floor.High / scale;
-                floorHeight = floor.High;
+                floorHeight = floor.High / scale;
+                // floorHeight = floor.High;
                 if (floorHeight == 0.0) { //if it's 0, set to 50.0
                     floorHeight = 50.0;
                 }
@@ -493,25 +493,7 @@ function ParseModel(json, is3d, theme){
                     }
                     floorObj.points.push({ name: funcArea.Name, type: funcArea.Type, position: new THREE.Vector3(center[0] * scale, floorHeight * scale, -center[1] * scale)});
 
-                    if(funcArea.Closed){
-                        //solid model
-                        // extrudeSettings = {amount: floorHeight, bevelEnabled: false};
-                        extrudeSettings = {amount: floorHeight, bevelEnabled: true, bevelThickness: 8};
-                        geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-                        material = new THREE.MeshLambertMaterial(theme.room(parseInt(funcArea.Type), funcArea.Category));
-                        mesh = new THREE.Mesh(geometry, material);
-                        mesh.type = "solidroom";
-                        mesh.id = funcArea._id;
-
-                        floorObj.add(mesh);
-
-                        //top wireframe
-                        // geometry = shape.createPointsGeometry();
-                        // wire = new THREE.Line(geometry, new THREE.LineBasicMaterial(theme.strokeStyle));
-                        // wire.position.set(0, 0, floorHeight);
-
-                        // floorObj.add(wire);
-                    }else{
+                    if(funcArea.Open){
                         var outline = funcArea.Outline[0][0];
                         for(let i=2; i+1<outline.length; i+=2){
                             var p1x = outline[i-2], p1y = outline[i-1];
@@ -543,6 +525,24 @@ function ParseModel(json, is3d, theme){
                             floorObj.add(line);
                         }
                         
+                    }else{
+                        //solid model
+                        // extrudeSettings = {amount: floorHeight, bevelEnabled: false};
+                        extrudeSettings = {amount: floorHeight, bevelEnabled: true, bevelThickness: 8};
+                        geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+                        material = new THREE.MeshLambertMaterial(theme.room(parseInt(funcArea.Type), funcArea.Category));
+                        mesh = new THREE.Mesh(geometry, material);
+                        mesh.type = "solidroom";
+                        mesh.id = funcArea._id;
+
+                        floorObj.add(mesh);
+
+                        //top wireframe
+                        // geometry = shape.createPointsGeometry();
+                        // wire = new THREE.Line(geometry, new THREE.LineBasicMaterial(theme.strokeStyle));
+                        // wire.position.set(0, 0, floorHeight);
+
+                        // floorObj.add(wire);
                     }
                     
                 }

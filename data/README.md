@@ -3,7 +3,7 @@
  * @Author: Huabin Feng
  * @Email: fenghb@mail.ustc.edu.cn
  * @Date: 2020-02-23 16:26:56
- * @LastEditTime: 2020-02-25 10:36:24
+ * @LastEditTime: 2020-02-25 11:55:40
  -->
 # data格式说明
 
@@ -26,7 +26,8 @@
                         "Center": [100, 200],
                         "Name_en": "3d Name",
                         "Name": "2d Name",
-                        "Closed": false,
+                        // 设置为非闭合
+                        "Open": ture,
                         "Wall": "room"
                     }
                 ],
