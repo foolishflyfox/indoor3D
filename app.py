@@ -1,8 +1,6 @@
 from flask import Flask, render_template, request
 import os
-
-def map_xml2json(simname):
-    return "get " + simname
+from xml2json import map_xml2json
 
 app = Flask(__name__, static_url_path='', static_folder='.')
 
@@ -14,10 +12,12 @@ def index():
 
 @app.route('/simulation', methods=['POST'])
 def simulation():
-    return request.form['simname']
     return map_xml2json(request.form['simname'])
 
 app.run(host='0.0.0.0', port=8080, debug=True)
+
+    
+
 
 
 
