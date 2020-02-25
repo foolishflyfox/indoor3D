@@ -578,6 +578,10 @@ function ParseModel(json, is3d, theme){
             //scale the mall
             mall.root.scale.set(scale, scale, scale);
             mall.root.rotateOnAxis(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
+            
+            if(building.TranslateX) mall.root.translateX(building.TranslateX);
+            if(building.TranslateY) mall.root.translateY(building.TranslateY);
+            if(building.TranslateZ) mall.root.translateZ(building.TranslateZ);
         }
 
         return mall;
