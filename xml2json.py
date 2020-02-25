@@ -2,6 +2,7 @@ import os.path
 import xml.dom.minidom
 import json
 import random
+from flask import render_template
 
 
 def CreateMapJsonFile(geoxml_path, geojson_path):
@@ -36,9 +37,9 @@ def map_xml2json(simname):
     geoname_json = os.path.splitext(geoname_xml)[0]+'.json'
     geoxml_path = f"{simdir}/{geoname_xml}"
     geojson_path = f"{simdir}/{geoname_json}"
-    # if(not os.path.isfile(geojson_path)):
-        # CreateMapJsonFile(geoxml_path, geojson_path)
-    return geojson_path
+    if(not os.path.isfile(geojson_path)):
+        CreateMapJsonFile(geoxml_path, geojson_path)
+    return render_template('./simulate.html', datafile=geojson_path)
     
     
 
