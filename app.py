@@ -10,9 +10,9 @@ def index():
     simulations = os.listdir(simulation_path)
     return render_template('./index.html', simulations=simulations)
 
-@app.route('/simulation', methods=['POST'])
+@app.route('/simulation', methods=['GET'])
 def simulation():
-    return map_xml2json(request.form['simname'])
+    return map_xml2json(request.args['simname'])
 
 app.run(host='0.0.0.0', port=8080, debug=True)
 
