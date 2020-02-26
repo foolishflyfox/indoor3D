@@ -495,7 +495,7 @@ function ParseModel(json, is3d, theme){
 
                     if(funcArea.Open){
                         var outline = funcArea.Outline[0][0];
-                        let wall_theme = theme.wall(funcArea.Wall);
+                        let wall_theme = theme.wall(funcArea.Wall, funcArea._id);
                         let wallline_theme = theme.wallline(funcArea.Wall);
                         for(let i=2; i+1<outline.length; i+=2){
                             var p1x = outline[i-2], p1y = outline[i-1];
@@ -532,7 +532,8 @@ function ParseModel(json, is3d, theme){
                         // extrudeSettings = {amount: floorHeight, bevelEnabled: false};
                         extrudeSettings = {amount: floorHeight, bevelEnabled: true, bevelThickness: 8};
                         geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-                        material = new THREE.MeshLambertMaterial(theme.room(parseInt(funcArea.Type), funcArea.Category));
+                        // material = new THREE.MeshLambertMaterial(theme.room(parseInt(funcArea.Type), funcArea.Category));
+                        material = new THREE.MeshLambertMaterial(theme.obstacle(parseInt(funcArea.Type), funcArea.Category));
                         mesh = new THREE.Mesh(geometry, material);
                         mesh.type = "solidroom";
                         mesh.id = funcArea._id;

@@ -181,7 +181,7 @@ var default3dTheme = {
 
     // walls' style
     subroom_id: 0,
-    wall: function(walltype){
+    wall: function(walltype, id){
         subroom_colors = [
             0xfffac8, 0xf2e282, 0xe7b24c,
             0xe1903e, 0xff724e];
@@ -197,6 +197,9 @@ var default3dTheme = {
                 break;
             case 'subroom':
                 opacity = 0.45;
+                if(id){
+                    this.subroom_id = id;
+                }
                 wallstyle.color = subroom_colors[(this.subroom_id++)%subroom_colors.length];
                 break;
         }
@@ -220,8 +223,8 @@ var default3dTheme = {
         return walllinestyle;
     },
 
-    //rooms' style
-    room: function (type, category) {
+    //obstacle' style
+    obstacle: function (type, category) {
         var roomStyle;
         if(!category) {
             switch (type) {
