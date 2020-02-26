@@ -311,8 +311,10 @@ function Mall(){
         if(!_this.is3d){ //only the 3d map can show all the floors
             return;
         }
-
-        _this.root.add(_this.building);
+        if(_this.building){
+            _this.root.add(_this.building);
+        }
+        
 
         var offset = 4;
         for(var i=0; i<_this.floors.length; i++){
@@ -324,7 +326,9 @@ function Mall(){
 //            }
             _this.root.add(this.floors[i]);
         }
-        this.building.scale.set(1,1,offset);
+        if(this.building && this.building.scale){
+            this.building.scale.set(1,1,offset);
+        }
 
         _curFloorId = 0;
 
