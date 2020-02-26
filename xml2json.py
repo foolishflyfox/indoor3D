@@ -4,23 +4,62 @@ import json
 import random
 from flask import render_template
 
-# TODO: 将一个 subroom 解析成一个 FuncArea 对象
+from utils import graham_scan, GetMaxRect
+
+# 将一个 subroom 解析成一个 FuncArea 对象
 # subroom 是一个 xml.dom.minidom.Element 类型
 def parseSubroom(subroom):
-    FuncArea = {'FuncArea': True}
-    return FuncArea
+    subroom_id = int(subroom.getAttribute('id'))
+    polygons = subroom.getElementsByTagName('polygon')
+    sub_funcareas = []
+    for polygon in polygons:
+        t_caption = polygon.getAttribute('caption')
+        sub_funcarea = {}
+        if(subroom_id):
+            sub_funcarea['_id'] = subroom_id
+        sub_funcarea['Wall'] = 'subroom'
+        sub_funcarea['Open'] = True
+        sub_funcarea['Outline'] = [[]]
+        points = []
+        vertexs = polygon.getElementsByTagName('vertex')
+        for vertex in vertexs:
+            points.append(int(vertex.getAttribute('px')))
+            points.append(int(vertex.getAttribute('py')))
+        sub_funcarea['Outline'][0].append(points)
+        sub_funcareas.append(sub_funcarea)
+    return sub_funcareas
 
-# TODO: 构建 Floor 对象
+# 求FuncAreas的外边界
+def GetFloorOutline(FuncAreas):
+    dots = []
+    for FuncArea in FuncAreas:
+        # print("funcarea :", FuncArea['Outline'][0][0])
+        # print('aaaa:', FuncArea['Outline'][0][0])
+        i = 0
+        t_outline = FuncArea['Outline'][0][0]
+        while i < len(t_outline):
+            dots.append((int(t_outline[i]), int(t_outline[i+1])))
+            i += 2
+    # print('t0 ',len(dots))
+    # print(dots)
+    # result = graham_scan(dots)
+    result = GetMaxRect(dots)
+    # print('t1 ', len(result))
+    return result
+
+# 构建 Floor 对象
 def CreateFloor(FuncAreas):
     Floor = {"_id":1, "Name":"F1", "High":5, "FuncAreas":[],
         "PubPoint":[]}
+    # print(FuncAreas)
     for FuncArea in FuncAreas:
         Floor['FuncAreas'].append(FuncArea)
+    Floor['Outline'] = [[GetFloorOutline(Floor['FuncAreas'])]]
     return Floor
 
 # TODO: 构建 Building 对象
 def CreateBuilding(Floors):
-    building = {'building': True}
+    building = {"Outline":[[[]]]}
     return building
 
 def CreateMapJsonFile(geoxml_path, geojson_path):
@@ -37,8 +76,8 @@ def CreateMapJsonFile(geoxml_path, geojson_path):
     for room in room_list:
         subrooms = room.getElementsByTagName('subroom')
         for subroom in subrooms:
-            FuncArea = parseSubroom(subroom)
-            FuncAreas.append(FuncArea)
+            sub_funcareas = parseSubroom(subroom)
+            FuncAreas += sub_funcareas
 
     Floor = CreateFloor(FuncAreas)
     Floors.append(Floor)
