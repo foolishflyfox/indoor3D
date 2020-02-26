@@ -180,7 +180,7 @@ IndoorMap2d = function(mapdiv){
         }
         
         _curFloorId = floorid;
-        if(floorid==0){
+        if(floorid==undefined|| floorid==0){
             // 2d 模式下没有 0 层
             floorid = _this.mall.floors[0]._id;
         }
@@ -990,6 +990,4 @@ Controller2D = function(renderer){
     this.domElement.addEventListener('touchstart', touchStart, false);
     this.domElement.addEventListener('mousedown', mouseDown, false);
     this.domElement.addEventListener('mousewheel', mouseWheel,false);
-
-
 }
