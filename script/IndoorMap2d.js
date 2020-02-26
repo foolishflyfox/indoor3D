@@ -180,6 +180,10 @@ IndoorMap2d = function(mapdiv){
         }
         
         _curFloorId = floorid;
+        if(floorid==0){
+            // 2d 模式下没有 0 层
+            floorid = _this.mall.floors[0]._id;
+        }
         _this.mall.showFloor(floorid);
 
         if(_this.options.showNames) {
