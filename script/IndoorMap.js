@@ -461,17 +461,19 @@ function ParseModel(json, is3d, theme){
                 }
                 buildingHeight += floorHeight;
                 points = parsePoints(floor.Outline[0][0]);
-                shape = new THREE.Shape(points);
-                geometry = new THREE.ShapeGeometry(shape);
-                mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial(theme.floor));
-                mesh.position.set(0, 0, -5);
-
+                if(points.length > 2){
+                    shape = new THREE.Shape(points);
+                    geometry = new THREE.ShapeGeometry(shape);
+                    mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial(theme.floor));
+                    mesh.position.set(0, 0, -5);
+                    floorObj.add(mesh);
+                }
                 floorObj.height = floorHeight;
-                floorObj.add(mesh);
                 floorObj.points = [];
                 floorObj._id = floor._id;
 
                 mall.floors.push(floorObj);
+                
             }else{//for 2d model
                 floor.strokeStyle = theme.strokeStyle.color;
                 floor.fillColor = theme.floor.color;
