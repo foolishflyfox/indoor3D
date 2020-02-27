@@ -128,7 +128,11 @@ def graham_scan(points):
  
     return stack
 
-def GetMaxRect(points):
+# 获取宽松的边界
+def GetLosseMaxRect(points):
+    return GetMaxRect(points, 1)
+
+def GetMaxRect(points, margin=0):
     left = sys.maxsize
     bottom = sys.maxsize
     right = -sys.maxsize
@@ -138,7 +142,8 @@ def GetMaxRect(points):
         right = max(right, x)
         bottom = min(bottom, y)
         top = max(top, y)
-    return [left, bottom, right, bottom, right, top, left, top]
+    return [left-margin, bottom-margin, right+margin, bottom-margin, 
+        right+margin, top+margin, left-margin, top+margin]
 
 def MaxRectBound(outline, type): 
     result = 0

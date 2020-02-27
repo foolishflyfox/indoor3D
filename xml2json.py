@@ -4,7 +4,7 @@ import json
 import random
 from flask import render_template
 
-from utils import GetMaxRect, MaxRectBound
+from utils import GetLosseMaxRect, MaxRectBound
 
 # 将一个 subroom 解析成一个 FuncArea 对象
 # subroom 是一个 xml.dom.minidom.Element 类型
@@ -43,7 +43,8 @@ def GetFloorOutline(FuncAreas):
     # print('t0 ',len(dots))
     # print(dots)
     # result = graham_scan(dots)
-    result = GetMaxRect(dots)
+    result = GetLosseMaxRect(dots)
+
     return result
 
 # 构建 Floor 对象
