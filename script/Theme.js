@@ -197,7 +197,7 @@ var default3dTheme = {
                 break;
             case 'subroom':
                 opacity = 0.45;
-                if(id){
+                if(id!=undefined){
                     this.subroom_id = id;
                 }
                 wallstyle.color = subroom_colors[(this.subroom_id++)%subroom_colors.length];

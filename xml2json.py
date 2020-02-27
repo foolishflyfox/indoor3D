@@ -9,14 +9,14 @@ from utils import GetMaxRect, MaxRectBound
 # 将一个 subroom 解析成一个 FuncArea 对象
 # subroom 是一个 xml.dom.minidom.Element 类型
 def parseSubroom(subroom):
-    subroom_id = int(subroom.getAttribute('id'))
+    s_subroom_id = subroom.getAttribute('id')
     polygons = subroom.getElementsByTagName('polygon')
     sub_funcareas = []
     for polygon in polygons:
         t_caption = polygon.getAttribute('caption')
         sub_funcarea = {}
-        if(subroom_id):
-            sub_funcarea['_id'] = subroom_id
+        if(s_subroom_id):
+            sub_funcarea['_id'] = int(s_subroom_id)
         sub_funcarea['Wall'] = 'subroom'
         sub_funcarea['Open'] = True
         sub_funcarea['Outline'] = [[]]
