@@ -44,7 +44,6 @@ def GetFloorOutline(FuncAreas):
     # print(dots)
     # result = graham_scan(dots)
     result = GetMaxRect(dots)
-    # print('t1 ', len(result))
     return result
 
 # 构建 Floor 对象
@@ -80,6 +79,20 @@ def CreateMapJsonFile(geoxml_path, geojson_path):
             FuncAreas += sub_funcareas
 
     Floor = CreateFloor(FuncAreas)
+    
+    xcenter = sum(Floor['Outline'][0][0][::2])/4
+    ycenter = sum(Floor['Outline'][0][0][1::2])/4
+    print(xcenter, ycenter)
+    for i in range(len(Floor['Outline'][0][0])):
+        if i%2: Floor['Outline'][0][0][i] -= ycenter
+        else: Floor['Outline'][0][0][i] -= xcenter
+    for i in range(len(Floor['FuncAreas'])):
+        j = 0
+        while j+1 < len(Floor['FuncAreas'][i]['Outline'][0][0]):
+            Floor['FuncAreas'][i]['Outline'][0][0][j] -= xcenter
+            Floor['FuncAreas'][i]['Outline'][0][0][j+1] -= ycenter
+            j += 2
+    print(Floor)
     Floors.append(Floor)
     result['data']['building'] = CreateBuilding(Floors)
     # print(json.dumps(result, indent=2))
