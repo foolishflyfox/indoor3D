@@ -4,7 +4,7 @@ import json
 import random
 from flask import render_template
 
-from utils import graham_scan, GetMaxRect
+from utils import GetMaxRect, MaxRectBound
 
 # 将一个 subroom 解析成一个 FuncArea 对象
 # subroom 是一个 xml.dom.minidom.Element 类型
@@ -80,19 +80,31 @@ def CreateMapJsonFile(geoxml_path, geojson_path):
 
     Floor = CreateFloor(FuncAreas)
     
-    xcenter = sum(Floor['Outline'][0][0][::2])/4
-    ycenter = sum(Floor['Outline'][0][0][1::2])/4
-    print(xcenter, ycenter)
-    for i in range(len(Floor['Outline'][0][0])):
-        if i%2: Floor['Outline'][0][0][i] -= ycenter
-        else: Floor['Outline'][0][0][i] -= xcenter
+    # 调整位置和大小的参数，使显示的场景更加适合界面
+    t_left = MaxRectBound(Floor['Outline'][0][0], 'left')
+    t_right = MaxRectBound(Floor['Outline'][0][0], 'right')
+    t_bottom = MaxRectBound(Floor['Outline'][0][0], 'bottom')
+    t_top = MaxRectBound(Floor['Outline'][0][0], 'top')
+    xcenter = (t_left+t_right)/2
+    ycenter = (t_bottom+t_top)/2
+    xlen = (t_right-t_left)
+    ylen = (t_top-t_bottom)
+    mlen = max(xlen, ylen)
+    scale = 1500/mlen
+    outline = Floor['Outline'][0][0]
+    for i in range(len(outline)):
+        if i%2: 
+            outline[i] = (outline[i]-ycenter)*scale
+        else: 
+            outline[i] = (outline[i]-xcenter)*scale
     for i in range(len(Floor['FuncAreas'])):
         j = 0
-        while j+1 < len(Floor['FuncAreas'][i]['Outline'][0][0]):
-            Floor['FuncAreas'][i]['Outline'][0][0][j] -= xcenter
-            Floor['FuncAreas'][i]['Outline'][0][0][j+1] -= ycenter
+        outline = Floor['FuncAreas'][i]['Outline'][0][0]
+        while j+1 < len(outline):
+            outline[j] = (outline[j]-xcenter)*scale
+            outline[j+1] = (outline[j+1]-ycenter)*scale
             j += 2
-    print(Floor)
+    # print(Floor)
     Floors.append(Floor)
     result['data']['building'] = CreateBuilding(Floors)
     # print(json.dumps(result, indent=2))

@@ -140,3 +140,15 @@ def GetMaxRect(points):
         top = max(top, y)
     return [left, bottom, right, bottom, right, top, left, top]
 
+def MaxRectBound(outline, type): 
+    result = 0
+    if(type=='left'):
+        result = outline[0]
+    elif(type=='right'):
+        result = outline[2]
+    elif(type=='bottom'):
+        result = outline[1]
+    elif(type=='top'):
+        result = outline[5]
+    return result
+
