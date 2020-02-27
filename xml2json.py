@@ -105,6 +105,8 @@ def CreateMapJsonFile(geoxml_path, geojson_path):
             outline[j+1] = (outline[j+1]-ycenter)*scale
             j += 2
     # print(Floor)
+    # 调整 Floor 的 High 属性以改变墙的高度
+    Floor['High'] = min(xlen, ylen)*scale/50
     Floors.append(Floor)
     result['data']['building'] = CreateBuilding(Floors)
     # print(json.dumps(result, indent=2))
