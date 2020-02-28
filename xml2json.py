@@ -51,6 +51,31 @@ def parseSubroom(subroom):
         
     return sub_funcareas
 
+# crossings 是不同 subroom 之间的通路
+def parseCrossings(crossings):
+    json_crossings = []
+    crossings = crossings.getElementsByTagName('crossing')
+    for crossing in crossings:
+        json_crossing = {}
+        if crossing.getAttribute('id'):
+            json_crossing['_id'] = int(crossing.getAttribute('id'))
+        json_crossing['Wall'] = 'crossing'
+        json_crossing['Open'] = True
+        json_crossing['Outline'] = [[]]
+        points = []
+        vertexs = crossing.getElementsByTagName('vertex')
+        for vertex in vertexs:
+            points.append(float(vertex.getAttribute('px')))
+            points.append(float(vertex.getAttribute('py')))
+        json_crossing['Outline'][0].append(points)
+        json_crossings.append(json_crossing)
+    return json_crossings
+
+# transition 是不同 room 之间的通路
+def parseTransition():
+    transitions = []
+    return transitions
+
 # 求FuncAreas的外边界
 def GetFloorOutline(FuncAreas):
     dots = []
@@ -101,6 +126,10 @@ def CreateMapJsonFile(geoxml_path, geojson_path):
         for subroom in subrooms:
             sub_funcareas = parseSubroom(subroom)
             FuncAreas += sub_funcareas
+        crossingses = room.getElementsByTagName('crossings')
+        for crossings in crossingses:
+            json_crossings = parseCrossings(crossings)
+            FuncAreas += json_crossings
 
     Floor = CreateFloor(FuncAreas)
     
@@ -115,17 +144,7 @@ def CreateMapJsonFile(geoxml_path, geojson_path):
     ylen = (t_top-t_bottom)
     mlen = max(xlen, ylen)
     scale = 2000/mlen
-    outline = Floor['Outline'][0][0]
-    for i in range(len(outline)):
-        if i%2: 
-            outline[i] = (outline[i]-ycenter)*scale
-        else: 
-            outline[i] = (outline[i]-xcenter)*scale
-    # 最大 Floor 的边界范围
-    margin_rate = 1.0/20
-    for i in range(len(outline)):
-        outline[i] *= (1+margin_rate)
-
+    
     for i in range(len(Floor['FuncAreas'])):
         j = 0
         outline = Floor['FuncAreas'][i]['Outline'][0][0]
@@ -133,6 +152,12 @@ def CreateMapJsonFile(geoxml_path, geojson_path):
             outline[j] = (outline[j]-xcenter)*scale
             outline[j+1] = (outline[j+1]-ycenter)*scale
             j += 2
+    # 扩大Floor的边界
+    outline = GetFloorOutline(Floor['FuncAreas'])
+    margin_rate = 1.0/20
+    for i in range(len(outline)):
+        outline[i] *= (1+margin_rate)
+    Floor['Outline'][0][0] = outline
     # print(Floor)
     # 调整 Floor 的 High 属性以改变墙的高度
     Floor['High'] = min(xlen, ylen)*scale/50

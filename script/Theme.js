@@ -202,6 +202,13 @@ var default3dTheme = {
                 }
                 wallstyle.color = subroom_colors[(this.subroom_id++)%subroom_colors.length];
                 break;
+            case 'transition':
+                wallstyle.color = 0x00ffc1;
+                break;
+            case 'crossing':
+                wallstyle.opacity = 0.3;
+                wallstyle.color = 0x00bfff;
+                break;
         }
         return wallstyle;
     },
