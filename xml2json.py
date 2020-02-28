@@ -4,7 +4,7 @@ import json
 import random
 from flask import render_template
 
-from utils import GetLosseMaxRect, MaxRectBound
+from utils import GetLosseMaxRect, GetMaxRect, MaxRectBound
 
 # 将一个 subroom 解析成一个 FuncArea 对象
 # subroom 是一个 xml.dom.minidom.Element 类型
@@ -43,7 +43,8 @@ def GetFloorOutline(FuncAreas):
     # print('t0 ',len(dots))
     # print(dots)
     # result = graham_scan(dots)
-    result = GetLosseMaxRect(dots)
+    # result = GetLosseMaxRect(dots)
+    result = GetMaxRect(dots)
 
     return result
 
@@ -57,7 +58,7 @@ def CreateFloor(FuncAreas):
     Floor['Outline'] = [[GetFloorOutline(Floor['FuncAreas'])]]
     return Floor
 
-# TODO: 构建 Building 对象
+# 构建 Building 对象
 def CreateBuilding(Floors):
     building = {"Outline":[[[]]]}
     return building
@@ -98,6 +99,11 @@ def CreateMapJsonFile(geoxml_path, geojson_path):
             outline[i] = (outline[i]-ycenter)*scale
         else: 
             outline[i] = (outline[i]-xcenter)*scale
+    # 最大 Floor 的边界范围
+    margin_rate = 1.0/20
+    for i in range(len(outline)):
+        outline[i] *= (1+margin_rate)
+
     for i in range(len(Floor['FuncAreas'])):
         j = 0
         outline = Floor['FuncAreas'][i]['Outline'][0][0]
@@ -108,6 +114,7 @@ def CreateMapJsonFile(geoxml_path, geojson_path):
     # print(Floor)
     # 调整 Floor 的 High 属性以改变墙的高度
     Floor['High'] = min(xlen, ylen)*scale/50
+
     Floors.append(Floor)
     result['data']['building'] = CreateBuilding(Floors)
     # print(json.dumps(result, indent=2))
