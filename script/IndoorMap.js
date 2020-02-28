@@ -500,6 +500,11 @@ function ParseModel(json, is3d, theme){
                     floorObj.points.push({ name: funcArea.Name, type: funcArea.Type, position: new THREE.Vector3(center[0] * scale, floorHeight * scale, -center[1] * scale)});
 
                     if(funcArea.Open){
+                        let t_height = floorHeight;
+                        console.log(funcArea.Wall, funcArea.Wall in ['crossing', 'xx'])
+                        if(funcArea.Wall=='transition' || funcArea.Wall=='crossing'){
+                            t_height /= 4;
+                        }
                         var outline = funcArea.Outline[0][0];
                         let wall_theme = theme.wall(funcArea.Wall, funcArea._id);
                         let wallline_theme = theme.wallline(funcArea.Wall);
@@ -509,10 +514,10 @@ function ParseModel(json, is3d, theme){
                             var geometry = new THREE.BufferGeometry();
                             var vertices = new Float32Array([
                                 p1x, p1y, 0,
-                                p1x, p1y, floorHeight,
+                                p1x, p1y, t_height,
                                 p2x, p2y, 0,
-                                p1x, p1y, floorHeight,
-                                p2x, p2y, floorHeight,
+                                p1x, p1y, t_height,
+                                p2x, p2y, t_height,
                                 p2x, p2y, 0
                             ]);
                             geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
@@ -525,8 +530,8 @@ function ParseModel(json, is3d, theme){
                             geometry.vertices.push(
                                 new THREE.Vector3(p1x, p1y, 0 ),
                                 new THREE.Vector3(p2x, p2y, 0 ),
-                                new THREE.Vector3(p2x, p2y, floorHeight ),
-                                new THREE.Vector3(p1x, p1y, floorHeight ),
+                                new THREE.Vector3(p2x, p2y, t_height ),
+                                new THREE.Vector3(p1x, p1y, t_height ),
                                 new THREE.Vector3(p1x, p1y, 0 )
                             );
                             var line = new THREE.Line( geometry, material );

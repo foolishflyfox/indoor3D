@@ -203,6 +203,7 @@ var default3dTheme = {
                 wallstyle.color = subroom_colors[(this.subroom_id++)%subroom_colors.length];
                 break;
             case 'transition':
+                wallstyle.opacity = 0.5;
                 wallstyle.color = 0x00ffc1;
                 break;
             case 'crossing':

@@ -72,9 +72,24 @@ def parseCrossings(crossings):
     return json_crossings
 
 # transition 是不同 room 之间的通路
-def parseTransition():
-    transitions = []
-    return transitions
+def parseTransitions(transitions):
+    json_transitions = []
+    transitions = transitions.getElementsByTagName('transition')
+    for transition in transitions:
+        json_transition = {}
+        if transition.getAttribute('id'):
+            json_transition['_id'] = int(transition.getAttribute('id'))
+        json_transition['Wall'] = 'transition'
+        json_transition['Open'] = True
+        json_transition['Outline'] = [[]]
+        points = []
+        vertexs = transition.getElementsByTagName('vertex')
+        for vertex in vertexs:
+            points.append(float(vertex.getAttribute('px')))
+            points.append(float(vertex.getAttribute('py')))
+        json_transition['Outline'][0].append(points)
+        json_transitions.append(json_transition)
+    return json_transitions
 
 # 求FuncAreas的外边界
 def GetFloorOutline(FuncAreas):
@@ -130,6 +145,10 @@ def CreateMapJsonFile(geoxml_path, geojson_path):
         for crossings in crossingses:
             json_crossings = parseCrossings(crossings)
             FuncAreas += json_crossings
+    transitionses = geometry.getElementsByTagName('transitions')
+    for transitions in transitionses:
+        json_transitions = parseTransitions(transitions)
+        FuncAreas += json_transitions
 
     Floor = CreateFloor(FuncAreas)
     
