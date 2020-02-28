@@ -23,8 +23,8 @@ def parseSubroom(subroom):
         points = []
         vertexs = polygon.getElementsByTagName('vertex')
         for vertex in vertexs:
-            points.append(int(vertex.getAttribute('px')))
-            points.append(int(vertex.getAttribute('py')))
+            points.append(float(vertex.getAttribute('px')))
+            points.append(float(vertex.getAttribute('py')))
         sub_funcarea['Outline'][0].append(points)
         sub_funcareas.append(sub_funcarea)
     return sub_funcareas
@@ -115,7 +115,7 @@ def CreateMapJsonFile(geoxml_path, geojson_path):
         json.dump(result, output, indent=2)
     
 
-def map_xml2json(simname):
+def map_xml2json(simname, showtype=True):
     simdir = f"./simulations/{simname}"
     inipath = f"{simdir}/ini.xml"
     dom = xml.dom.minidom.parse(inipath)
@@ -127,7 +127,7 @@ def map_xml2json(simname):
     geojson_path = f"{simdir}/{geoname_json}"
     if(not os.path.isfile(geojson_path)):
         CreateMapJsonFile(geoxml_path, geojson_path)
-    return render_template('./simulate.html', datafile=geojson_path)
+    return render_template('./simulate.html', datafile=geojson_path, showtype=showtype)
     
     
 

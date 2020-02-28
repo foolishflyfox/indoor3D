@@ -115,7 +115,12 @@
                         <option value="{{ simulation }}">{{ simulation }}</option>
                         {% endfor %}
                     </select>
-
+                    <p><label>显示类型:</label></p>
+                    <input type="radio" name="showtype" id="type3d" value="3d" checked>
+                    <label for="type3d">3D</label>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="showtype" id="type2d" value="2d">
+                    <label for="type2d">2D</label>
                     <!-- <p><input type="text" id="text" name="text" class="SimInput" autofocus="autofocus" required="required" autocomplete="off" placeholder="请输入邮箱/手机号" value="" /></p> -->
                     <!-- <p><label for="password">密码：</label></p> -->
                     <!-- <p><input type="password" id="password" name="password" class="SimInput" required="required" placeholder="请输入密码" value="" /></p> -->

@@ -12,7 +12,7 @@ def index():
 
 @app.route('/simulation', methods=['GET'])
 def simulation():
-    return map_xml2json(request.args['simname'])
+    return map_xml2json(request.args['simname'], request.args['showtype'])
 
 app.run(host='0.0.0.0', port=8080, debug=True)
 

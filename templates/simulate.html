@@ -24,11 +24,12 @@
 <script>
 
     var params = {
-        mapDiv:"indoor3d",
+        // mapDiv:"indoor3d",
         // dim:"2d"
-        dim:"3d"
+        // dim:"3d"
+        dim: "{{ showtype }}"
     }
-    var map = IndoorMap();
+    var map = IndoorMap(params);
     var file_json;
     // file_json = 'data/北京-7-侨福芳草地购物中心.json';
     // file_json = 'data/mydata.json';
@@ -39,7 +40,7 @@
         map.showAreaNames(true).setSelectable(true);
         var ul = IndoorMap.getUI(map);
         document.body.appendChild(ul);
-        // map.showFloor(1);
+        // map.showFloor(0);
     });
 
 </script>
