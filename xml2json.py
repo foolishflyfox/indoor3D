@@ -9,8 +9,10 @@ from utils import GetLosseMaxRect, GetMaxRect, MaxRectBound
 # 将一个 subroom 解析成一个 FuncArea 对象
 # subroom 是一个 xml.dom.minidom.Element 类型
 def parseSubroom(subroom):
+    # 如果属性不存在，getAttribute 返回一个空字符串
     s_subroom_id = subroom.getAttribute('id')
     polygons = subroom.getElementsByTagName('polygon')
+    obstacles = subroom.getElementsByTagName('obstacle')
     sub_funcareas = []
     for polygon in polygons:
         t_caption = polygon.getAttribute('caption')
@@ -27,6 +29,26 @@ def parseSubroom(subroom):
             points.append(float(vertex.getAttribute('py')))
         sub_funcarea['Outline'][0].append(points)
         sub_funcareas.append(sub_funcarea)
+    for obstacle in obstacles:
+        json_obstacle = {}
+        t_caption = polygon.getAttribute('caption')
+        if obstacle.getAttribute('id'):
+            json_obstacle['_id'] = int(obstacle.getAttribute('id'))
+        if polygon.getAttribute('closed') in ['', '1']:
+            json_obstacle['Open'] = False
+        else:
+            json_obstacle['Open'] = True
+        json_obstacle['Outline'] = [[]]
+        points = []
+        polygons = obstacle.getElementsByTagName('polygon')
+        if(len(polygons)==0): continue
+        vertexs = polygons[0].getElementsByTagName('vertex')
+        for vertex in vertexs:
+            points.append(float(vertex.getAttribute('px')))
+            points.append(float(vertex.getAttribute('py')))
+        json_obstacle['Outline'][0].append(points)
+        sub_funcareas.append(json_obstacle)
+        
     return sub_funcareas
 
 # 求FuncAreas的外边界
@@ -92,7 +114,7 @@ def CreateMapJsonFile(geoxml_path, geojson_path):
     xlen = (t_right-t_left)
     ylen = (t_top-t_bottom)
     mlen = max(xlen, ylen)
-    scale = 1500/mlen
+    scale = 2000/mlen
     outline = Floor['Outline'][0][0]
     for i in range(len(outline)):
         if i%2: 
