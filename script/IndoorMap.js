@@ -501,7 +501,6 @@ function ParseModel(json, is3d, theme){
 
                     if(funcArea.Open){
                         let t_height = floorHeight;
-                        console.log(funcArea.Wall, funcArea.Wall in ['crossing', 'xx'])
                         if(funcArea.Wall=='transition' || funcArea.Wall=='crossing'){
                             t_height /= 4;
                         }
