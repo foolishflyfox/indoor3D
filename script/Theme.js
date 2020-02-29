@@ -6,7 +6,7 @@
 //----------------------------theme--------------------------------------
 
 var default2dTheme = {
-    name: "test", //theme's name
+    name: "2d", //theme's name
     background: "#F2F2F2", //background color
 
     //building's style
@@ -138,6 +138,16 @@ var default2dTheme = {
         linewidth: 1
     },
 
+    getStrokeColor: function(walltype){
+        color = this.strokeStyle.color;
+        if(walltype=='crossing'){
+            color = '#00bfff';
+        }else if(walltype=='transition'){
+            color = "#00ffc1";
+        }
+        return color;
+    },
+
     fontStyle:{
         opacity: 1,
         textAlign: "center",
@@ -158,7 +168,7 @@ var default2dTheme = {
     }
 }
 var default3dTheme = {
-    name: "test", //theme's name
+    name: "3d", //theme's name
     background: "#F2F2F2", //background color
 
     //building's style

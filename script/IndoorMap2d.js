@@ -178,7 +178,7 @@ IndoorMap2d = function(mapdiv){
         if(_this.mall == null){
             return;
         }
-        
+
         _curFloorId = floorid;
         if(floorid==undefined|| floorid==0){
             // 2d 模式下没有 0 层
@@ -562,6 +562,7 @@ Canvas2DRenderer = function (map) {
         var funcAreas = _curFloor.FuncAreas;
         for(var i = 0 ; i < funcAreas.length; i++){
             var funcArea = funcAreas[i];
+            _ctx.strokeStyle = theme.getStrokeColor(funcArea.Wall);
             var poly = funcArea.newOutline;
             if(!funcArea.Open){
                 if(poly.length < 6){ //less than 3 points, return
