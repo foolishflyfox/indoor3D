@@ -91,6 +91,28 @@ def parseTransitions(transitions):
         json_transitions.append(json_transition)
     return json_transitions
 
+def parseGoals(goals):
+    json_goals = []
+    goals = goals.getElementsByTagName('goal')
+    for goal in goals:
+        goal_funcarea = {}
+        if goal.getAttribute('id'):
+            goal_funcarea['_id'] = int(goal.getAttribute('id'))
+        if goal.getAttribute('final')=="false": goal_funcarea['Category'] = 2
+        else: goal_funcarea['Category'] = 1
+        goal_funcarea['Open'] = False
+        goal_funcarea['Outline'] = [[]]
+        points = []
+        polygons = goal.getElementsByTagName('polygon')
+        if len(polygons)==0: continue
+        polygon = polygons[0]
+        for vertex in polygon.getElementsByTagName('vertex'):
+            points.append(float(vertex.getAttribute('px')))
+            points.append(float(vertex.getAttribute('py')))
+        goal_funcarea['Outline'][0].append(points)
+        json_goals.append(goal_funcarea)
+    return json_goals
+
 # 求FuncAreas的外边界
 def GetFloorOutline(FuncAreas):
     dots = []
@@ -100,10 +122,9 @@ def GetFloorOutline(FuncAreas):
         i = 0
         t_outline = FuncArea['Outline'][0][0]
         while i < len(t_outline):
-            dots.append((int(t_outline[i]), int(t_outline[i+1])))
+            # dots.append((int(t_outline[i]), int(t_outline[i+1])))
+            dots.append((t_outline[i], t_outline[i+1]))
             i += 2
-    # print('t0 ',len(dots))
-    # print(dots)
     # result = graham_scan(dots)
     # result = GetLosseMaxRect(dots)
     result = GetMaxRect(dots)
@@ -125,7 +146,7 @@ def CreateBuilding(Floors):
     building = {"Outline":[[[]]]}
     return building
 
-def CreateMapJsonFile(geoxml_path, geojson_path):
+def CreateMapJsonFile(geoxml_path, geojson_path, jupedsim=None):
     result = {'data':{'Floors':[]}}
     Floors = result['data']['Floors']
 
@@ -150,8 +171,20 @@ def CreateMapJsonFile(geoxml_path, geojson_path):
         json_transitions = parseTransitions(transitions)
         FuncAreas += json_transitions
 
+    # 获取 <routing> 中的 <goal> 信息
+    if jupedsim is None:
+        simdir = os.path.dirname(geoxml_path)
+        inipath = f"{simdir}/ini.xml"
+        jupedsim = xml.dom.minidom.parse(inipath).documentElement
+    routings = jupedsim.getElementsByTagName('routing')
+    for routing in routings:
+        goalses = routing.getElementsByTagName('goals')
+        for goals in goalses:
+            json_goals = parseGoals(goals)
+            FuncAreas += json_goals
+
     Floor = CreateFloor(FuncAreas)
-    
+
     # 调整位置和大小的参数，使显示的场景更加适合界面
     t_left = MaxRectBound(Floor['Outline'][0][0], 'left')
     t_right = MaxRectBound(Floor['Outline'][0][0], 'right')
@@ -192,14 +225,14 @@ def map_xml2json(simname, showtype=True):
     simdir = f"./simulations/{simname}"
     inipath = f"{simdir}/ini.xml"
     dom = xml.dom.minidom.parse(inipath)
-    root = dom.documentElement
-    geometry = root.getElementsByTagName('geometry')[0]
+    jupedsim = dom.documentElement
+    geometry = jupedsim.getElementsByTagName('geometry')[0]
     geoname_xml = geometry.firstChild.data
     geoname_json = os.path.splitext(geoname_xml)[0]+'.json'
     geoxml_path = f"{simdir}/{geoname_xml}"
     geojson_path = f"{simdir}/{geoname_json}"
     if(not os.path.isfile(geojson_path)):
-        CreateMapJsonFile(geoxml_path, geojson_path)
+        CreateMapJsonFile(geoxml_path, geojson_path, jupedsim)
     return render_template('./simulate.html', datafile=geojson_path, showtype=showtype)
     
     

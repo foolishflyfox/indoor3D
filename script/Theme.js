@@ -57,6 +57,20 @@ var default2dTheme = {
         }
 
         switch(category) {
+            case 1: // final goal
+                roomStyle = {
+                    color: "#5dff00",
+                    opacity: 0.5,
+                    transparent: true
+                };
+                break;
+            case 2: // mid goal
+                roomStyle = {
+                    color: "#91c8ff",
+                    opacity: 0.5,
+                    transparent: true
+                };
+                break;
             case 101: //food
                 roomStyle = {
                     color: "#1f77b4",
@@ -271,6 +285,20 @@ var default3dTheme = {
         }
 
         switch(category) {
+            case 1: // final goal
+                roomStyle = {
+                    color: "#00ff00",
+                    opacity: 0.5,
+                    transparent: true
+                };
+                break;
+            case 2: // mid goal
+                roomStyle = {
+                    color: "#0000ff",
+                    opacity: 0.5,
+                    transparent: true
+                };
+                break;
             case 101: //food
                 roomStyle = {
                     color: "#1f77b4",

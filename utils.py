@@ -1,11 +1,6 @@
 import math
 import sys
  
-"""
-使用Graham扫描法计算凸包
-网上的代码好多运行效果并不好
-算法参见《算法导论》第三版 第605页
-"""
 
 def get_bottom_point(points):
     """
