@@ -113,6 +113,32 @@ def parseGoals(goals):
         json_goals.append(goal_funcarea)
     return json_goals
 
+def parseTriangulateFile(filepath):
+    if not os.path.exists(filepath):
+        return []
+    json_triangles = []
+    edges = set()
+    with open(filepath) as f:
+        for line in f:
+            x1, y1, x2, y2 = [float(s) for s in line.split(' ')]
+            if x1 < x2:
+                edges.add((x1, y1, x2, y2))
+            elif x2 < x1:
+                edges.add((x2, y2, x1, y1))
+            else:
+                if y1 < y2:
+                    edges.add((x1, y1, x2, y2))
+                else:
+                    edges.add((x2, y2, x1, y1))
+    for x1,y1,x2,y2 in edges:
+        json_triangle = {}
+        json_triangle['Wall'] = 'triangle'
+        json_triangle['Open'] = True
+        json_triangle['Outline'] = [[[x1, y1, x2, y2]]]
+        json_triangles.append(json_triangle)
+    return json_triangles
+    
+
 # 求FuncAreas的外边界
 def GetFloorOutline(FuncAreas):
     dots = []
@@ -172,8 +198,8 @@ def CreateMapJsonFile(geoxml_path, geojson_path, jupedsim=None):
         FuncAreas += json_transitions
 
     # 获取 <routing> 中的 <goal> 信息
+    simdir = os.path.dirname(geoxml_path)
     if jupedsim is None:
-        simdir = os.path.dirname(geoxml_path)
         inipath = f"{simdir}/ini.xml"
         jupedsim = xml.dom.minidom.parse(inipath).documentElement
     routings = jupedsim.getElementsByTagName('routing')
@@ -182,6 +208,10 @@ def CreateMapJsonFile(geoxml_path, geojson_path, jupedsim=None):
         for goals in goalses:
             json_goals = parseGoals(goals)
             FuncAreas += json_goals
+
+    # 获取三角形化的信息
+    triangles = parseTriangulateFile(f"{simdir}/triangulate_result.txt")
+    FuncAreas += triangles
 
     Floor = CreateFloor(FuncAreas)
 
